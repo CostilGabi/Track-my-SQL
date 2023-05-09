@@ -1,7 +1,10 @@
 <?php
 /*
 
-Plugin Name: Changes to SQL
+Plugin Name: Track my SQL
+Description: PhP script that will track every database modification based on save_posts hook. This script was made as plugin type.
+Author: Costil Gabriel
+Version: 1.0
 
 */
 

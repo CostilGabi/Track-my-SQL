@@ -17,7 +17,7 @@ $file_path = __DIR__ . '/post_changes.sql';
 // Initialize the SQL file
 if (!file_exists($file_path)) {
 
-    file_put_contents($file_path, "CREATE DATABASE IF NOT EXISTS sst;\nUSE sst;\n\n");
+    file_put_contents($file_path, "CREATE DATABASE IF NOT EXISTS [YOUR DATABASE NAME];\nUSE [YOUR DATABASE NAME];\n\n");
 
 }
 
@@ -29,7 +29,7 @@ function export_post_changes($post_ID, $post, $update) {
         return;
     }
 
-    // Check if post_date_gmt is empty or invalid
+    // Check if post_date_gmt is empty or invalid (it's for when SQL is in safe mode)
     if (empty($post->post_date_gmt) || $post->post_date_gmt == '0000-00-00 00:00:00') {
 
         $post_date_gmt = gmdate('Y-m-d H:i:s', current_time('timestamp', 1));
@@ -67,8 +67,8 @@ function export_post_changes($post_ID, $post, $update) {
         'comment_count' => $post->comment_count
     );
 
-    // Build the SQL query to update the post data
-    $sql_query = "REPLACE INTO ddlbwn_posts (";
+    // Build the SQL query to update the post data. If you have a different prefix, change it here!
+    $sql_query = "REPLACE INTO wp_posts (";
     $sql_query .= implode(", ", array_keys($post_data));
     $sql_query .= ") VALUES (";
     
@@ -92,7 +92,7 @@ function import_sql_changes($file_path) {
     $sql_file = file($file_path);
     $db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-    // Execute each line as an SQL query
+    // Execute each line as an SQL query. This part will make sure to sustain your modifications. You can delete this part if you only want to get tracked.
     foreach ($sql_file as $line) {
 
         // Skip comments and empty lines
@@ -117,7 +117,7 @@ function import_sql_changes($file_path) {
 
 }
 
-// Import the SQL changes
+// Import the SQL changes. As above, this can be deleted too if you don't want that feature.
 import_sql_changes(__DIR__ . '/post_changes.sql');
 
 ?>
